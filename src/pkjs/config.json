@@ -1,0 +1,57 @@
+[
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "🍻🍻🍻🍻🍻"
+      },
+      {
+        "type": "select",
+        "messageKey": "fill_direction",
+        "defaultValue": "top",
+        "label": "Fill Direction",
+        "options": [
+          {
+            "label": "Random",
+            "value": "random"
+          },
+          {
+            "label": "⬆️",
+            "value": "top"
+          },
+          {
+            "label": "⬇️",
+            "value": "bottom"
+          },
+          {
+            "label": "⬅️",
+            "value": "left"
+          },
+          {
+            "label": "➡️",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "messageKey": "background_color",
+        "defaultValue": "CD2231",
+        "label": "Background Color",
+        "allowGray": true
+      },
+      {
+        "type": "color",
+        "messageKey": "dot_color",
+        "defaultValue": "FFFFFF",
+        "label": "Dot Color",
+        "allowGray": true
+      },
+      {
+        "type": "submit",
+        "defaultValue": "Save"
+      }
+    ]
+  }
+]
