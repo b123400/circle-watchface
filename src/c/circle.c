@@ -176,8 +176,7 @@ static void prv_window_unload(Window *window) {
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   int minute = (*tick_time).tm_min;
-  int hour = (*tick_time).tm_hour;
-  if ((minute + hour * 60) % 10 == 0) {
+  if (minute % (60 / vertex_count) == 0) {
     layer_mark_dirty(bitmap_layer);
   }
 }
