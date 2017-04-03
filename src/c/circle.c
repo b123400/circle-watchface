@@ -142,7 +142,7 @@ static void bitmap_layer_update_proc(Layer *layer, GContext* ctx) {
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
   graphics_context_set_stroke_width(ctx, 1);
 
-  int hour_index = (hour / 24.0) * vertex_count;
+  int hour_index = ((hour % 12) / 12.0) * vertex_count;
   int min_index = (minute / 60.0) * vertex_count;
 
   for (int i = 0; i < vertex_count; i++) {
