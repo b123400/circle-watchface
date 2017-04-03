@@ -98,6 +98,7 @@ static void index_interaction(int index, GPoint *out1, GPoint *out2, GPoint *out
 static void highlight_index(GContext *ctx, int index, GPoint points[], GPath **path_ptr) {
   GPoint target;
   GPoint p1, p2, p3;
+  GPathInfo path_info;
   get_vertex(index, &target);
   index_interaction(index, &p1, &p2, &p3);
 
@@ -105,14 +106,24 @@ static void highlight_index(GContext *ctx, int index, GPoint points[], GPath **p
     gpath_destroy(*path_ptr);
   }
 
-  points[0] = target;
-  points[1] = p1;
-  points[2] = p3;
-  points[3] = p2;
-  GPathInfo path_info = {
-    .num_points = 4,
-    .points = points
-  };
+  if (vertex_shift == 2) {
+    points[0] = target;
+    points[1] = p1;
+    points[2] = p2;
+    path_info = (GPathInfo){
+      .num_points = 3,
+      .points = points
+    };
+  } else {
+    points[0] = target;
+    points[1] = p1;
+    points[2] = p3;
+    points[3] = p2;
+    path_info = (GPathInfo){
+      .num_points = 4,
+      .points = points
+    };
+  }
   *path_ptr = gpath_create(&path_info);
   gpath_draw_filled(ctx, *path_ptr);
 }
