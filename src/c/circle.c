@@ -38,12 +38,9 @@ static GPoint min_points[4];
 static void get_vertex(int index, GPoint *out_point) {
   index = index % vertex_count;
   int32_t angle = TRIG_MAX_ANGLE * index / vertex_count;
-  // not quite sure where is the origin and direction of pebble
-  // anyway i need this to make it good
-  angle = (angle + (TRIG_MAX_ANGLE/4)) * -1;
   GPoint point;
-  point.x = (-cos_lookup(angle) * (MIN(bounds.size.h, bounds.size.w)/2) / TRIG_MAX_RATIO) + center.y;
-  point.y = (sin_lookup(angle) * (MIN(bounds.size.h, bounds.size.w)/2) / TRIG_MAX_RATIO) + center.x;
+  point.y = (-cos_lookup(angle) * (bounds.size.w/2) / TRIG_MAX_RATIO) + center.y;
+  point.x = (sin_lookup(angle) * (bounds.size.w/2) / TRIG_MAX_RATIO) + center.x;
   *out_point = point;
 }
 
