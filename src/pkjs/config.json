@@ -4,49 +4,51 @@
     "items": [
       {
         "type": "heading",
-        "defaultValue": "🍻🍻🍻🍻🍻"
-      },
-      {
-        "type": "select",
-        "messageKey": "fill_direction",
-        "defaultValue": "top",
-        "label": "Fill Direction",
-        "options": [
-          {
-            "label": "Random",
-            "value": "random"
-          },
-          {
-            "label": "⬆️",
-            "value": "top"
-          },
-          {
-            "label": "⬇️",
-            "value": "bottom"
-          },
-          {
-            "label": "⬅️",
-            "value": "left"
-          },
-          {
-            "label": "➡️",
-            "value": "right"
-          }
-        ]
+        "defaultValue": "🤘🤘🤘🤘"
       },
       {
         "type": "color",
         "messageKey": "background_color",
-        "defaultValue": "CD2231",
+        "defaultValue": "FFFFFF",
         "label": "Background Color",
         "allowGray": true
       },
       {
         "type": "color",
-        "messageKey": "dot_color",
-        "defaultValue": "FFFFFF",
-        "label": "Dot Color",
+        "messageKey": "line_color",
+        "defaultValue": "555555",
+        "label": "Line Color",
         "allowGray": true
+      },
+      {
+        "type": "color",
+        "messageKey": "hour_color",
+        "defaultValue": "FF0000",
+        "label": "Hour Color",
+        "allowGray": true
+      },
+      {
+        "type": "color",
+        "messageKey": "min_color",
+        "defaultValue": "AA0000",
+        "label": "Minute Color",
+        "allowGray": true
+      },
+      {
+        "type": "slider",
+        "messageKey": "vertex_count",
+        "defaultValue": 12,
+        "label": "Vertex Count",
+        "min": 6,
+        "max": 24
+      },
+      {
+        "type": "slider",
+        "messageKey": "vertex_shift",
+        "defaultValue": 3,
+        "label": "Vertex Shift",
+        "min": 2,
+        "max": 20
       },
       {
         "type": "submit",

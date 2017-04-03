@@ -8,19 +8,22 @@ static Window *s_window;
 static Layer *bitmap_layer;
 
 static GColor background_color;
-static GColor dot_color;
-static int vertex_count = 24;
-static int vertex_shift = 6;
+static GColor line_color;
+static GColor hour_color;
+static GColor min_color;
 
-// y = mx+c
-// m1x + c1 = m2x+c2
-// c1 - c2 = m2x - m1x
-// c1 - c2 = (m2 - m1)x
-// (c1 - c2) / (m2 - m1) = x
+static int vertex_count = 12;
+static int vertex_shift = 2;
+
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 
 typedef struct ClaySettings {
   GColor BackgroundColor;
-  GColor DotColor;
+  GColor LineColor;
+  GColor HourColor;
+  GColor MinColor;
+  int VertexCount;
+  int VertexShift;
 } ClaySettings;
 
 static ClaySettings settings;
@@ -140,7 +143,9 @@ static void bitmap_layer_update_proc(Layer *layer, GContext* ctx) {
   // background color
   graphics_context_set_fill_color(ctx, background_color);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
+
   graphics_context_set_stroke_width(ctx, 1);
+  graphics_context_set_stroke_color(ctx, line_color);
 
   int hour_index = ((hour % 12) / 12.0) * vertex_count;
   int min_index = (minute / 60.0) * vertex_count;
@@ -149,11 +154,11 @@ static void bitmap_layer_update_proc(Layer *layer, GContext* ctx) {
     draw_line(ctx, i);
   }
 
-  graphics_context_set_stroke_color(ctx, GColorRed);
-  graphics_context_set_stroke_width(ctx, 2);
-
-  highlight_index(ctx, hour_index, hour_points, &hour_path_ptr);
+  graphics_context_set_fill_color(ctx, min_color);
   highlight_index(ctx, min_index, min_points, &min_path_ptr);
+
+  graphics_context_set_fill_color(ctx, hour_color);
+  highlight_index(ctx, hour_index, hour_points, &hour_path_ptr);
 }
 
 static void prv_window_load(Window *window) {
@@ -178,20 +183,63 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) {
+  // Read color preferences
+  Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_background_color);
+  if(bg_color_t) {
+    background_color = GColorFromHEX(bg_color_t->value->int32);
+  }
+  Tuple *line_color_t = dict_find(iter, MESSAGE_KEY_line_color);
+  if(line_color_t) {
+    line_color = GColorFromHEX(line_color_t->value->int32);
+  }
+  Tuple *hour_color_t = dict_find(iter, MESSAGE_KEY_hour_color);
+  if(hour_color_t) {
+    hour_color = GColorFromHEX(hour_color_t->value->int32);
+  }
+  Tuple *min_color_t = dict_find(iter, MESSAGE_KEY_min_color);
+  if(min_color_t) {
+    min_color = GColorFromHEX(min_color_t->value->int32);
+  }
+  Tuple *vertex_count_t = dict_find(iter, MESSAGE_KEY_vertex_count);
+  if(vertex_count_t) {
+    // This value was stored as JS Number, which is stored here as int32_t
+    vertex_count = (int)vertex_count_t->value->int32;
+  }
+  Tuple *vertex_shift_t = dict_find(iter, MESSAGE_KEY_vertex_shift);
+  if(vertex_shift_t) {
+    // This value was stored as JS Number, which is stored here as int32_t
+    vertex_shift = (int)vertex_shift_t->value->int32;
+  }
+  layer_mark_dirty(bitmap_layer);
 
+  settings.BackgroundColor = background_color;
+  settings.LineColor = line_color;
+  settings.HourColor = hour_color;
+  settings.MinColor = min_color;
+  settings.VertexCount = vertex_count;
+  settings.VertexShift = vertex_shift;
+  persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
 static void prv_init(void) {
 
   // default settings
-  settings.BackgroundColor = GColorFromRGBA(205, 34, 49, 255);
-  settings.DotColor = GColorWhite;
+  settings.BackgroundColor = GColorWhite;
+  settings.LineColor = GColorDarkGray;
+  settings.HourColor = GColorRed;
+  settings.MinColor = GColorDarkCandyAppleRed;
+  settings.VertexCount = 12;
+  settings.VertexShift = 3;
 
   persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 
   // apply saved data
-  // background_color = settings.BackgroundColor;
-  // dot_color = settings.DotColor;
+  background_color = settings.BackgroundColor;
+  line_color = settings.LineColor;
+  hour_color = settings.HourColor;
+  min_color = settings.MinColor;
+  vertex_count = settings.VertexCount;
+  vertex_shift = settings.VertexShift;
 
   app_message_register_inbox_received(prv_inbox_received_handler);
   app_message_open(128, 128);

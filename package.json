@@ -22,7 +22,12 @@
       "watchface": true
     },
     "messageKeys": [
-      "dummy"
+      "background_color",
+      "line_color",
+      "hour_color",
+      "min_color",
+      "vertex_count",
+      "vertex_shift"
     ],
     "resources": {
       "media": []
