@@ -1,9 +1,9 @@
 {
   "name": "circle",
-  "author": "MakeAwesomeHappen",
+  "author": "b123400",
   "version": "1.0.0",
-  "keywords": ["pebble-app"],
-  "private": true,
+  "keywords": ["circle", "round"],
+  "private": false,
   "dependencies": {
     "pebble-clay": "^1.0.3"
   },
