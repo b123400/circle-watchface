@@ -39,8 +39,8 @@ static void get_vertex(int index, GPoint *out_point) {
   // anyway i need this to make it good
   angle = (angle + (TRIG_MAX_ANGLE/4)) * -1;
   GPoint point;
-  point.x = (-cos_lookup(angle) * (bounds.size.h/2) / TRIG_MAX_RATIO) + center.y;
-  point.y = (sin_lookup(angle) * (bounds.size.h/2) / TRIG_MAX_RATIO) + center.x;
+  point.x = (-cos_lookup(angle) * (MIN(bounds.size.h, bounds.size.w)/2) / TRIG_MAX_RATIO) + center.y;
+  point.y = (sin_lookup(angle) * (MIN(bounds.size.h, bounds.size.w)/2) / TRIG_MAX_RATIO) + center.x;
   *out_point = point;
 }
 
