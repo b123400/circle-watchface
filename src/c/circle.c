@@ -128,11 +128,19 @@ static void highlight_index(GContext *ctx, int index, GPoint points[], GPath **p
   gpath_draw_filled(ctx, *path_ptr);
 }
 
-static void bitmap_layer_update_proc(Layer *layer, GContext* ctx) {
+static void get_hour_min_index(int *hour_index, int *min_index) {
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
   int minute = (*t).tm_min;
   int hour = (*t).tm_hour;
+
+  *hour_index = ((hour % 12) / 12.0) * vertex_count;
+  *min_index = 4;
+}
+
+static void bitmap_layer_update_proc(Layer *layer, GContext* ctx) {
+  int hour_index, min_index;
+  get_hour_min_index(&hour_index, &min_index);
 
   bounds = layer_get_bounds(layer);
   center = grect_center_point(&bounds);
@@ -143,9 +151,8 @@ static void bitmap_layer_update_proc(Layer *layer, GContext* ctx) {
 
   graphics_context_set_stroke_width(ctx, 1);
   graphics_context_set_stroke_color(ctx, line_color);
+  graphics_context_set_antialiased(ctx, true);
 
-  int hour_index = ((hour % 12) / 12.0) * vertex_count;
-  int min_index = (minute / 60.0) * vertex_count;
 
   for (int i = 0; i < vertex_count; i++) {
     draw_line(ctx, i);
@@ -171,10 +178,15 @@ static void prv_window_unload(Window *window) {
   layer_destroy(bitmap_layer);
 }
 
+static int last_hour = -1;
+static int last_min = -1;
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-  int minute = (*tick_time).tm_min;
-  if (minute % (60 / vertex_count) == 0) {
+  int hour_index, min_index;
+  get_hour_min_index(&hour_index, &min_index);
+  if (hour_index != last_hour || min_index != last_min) {
     layer_mark_dirty(bitmap_layer);
+    last_hour = hour_index;
+    last_min = min_index;
   }
 }
 
