@@ -12,8 +12,8 @@ static GColor line_color;
 static GColor hour_color;
 static GColor min_color;
 
-static int vertex_count = 12;
-static int vertex_shift = 2;
+static int32_t vertex_count = 12;
+static int32_t vertex_shift = 2;
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 
@@ -22,8 +22,8 @@ typedef struct ClaySettings {
   GColor LineColor;
   GColor HourColor;
   GColor MinColor;
-  int VertexCount;
-  int VertexShift;
+  int32_t VertexCount;
+  int32_t VertexShift;
 } ClaySettings;
 
 static ClaySettings settings;
@@ -199,12 +199,12 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   Tuple *vertex_count_t = dict_find(iter, MESSAGE_KEY_vertex_count);
   if(vertex_count_t) {
     // This value was stored as JS Number, which is stored here as int32_t
-    vertex_count = (int)vertex_count_t->value->int32;
+    vertex_count = vertex_count_t->value->int32;
   }
   Tuple *vertex_shift_t = dict_find(iter, MESSAGE_KEY_vertex_shift);
   if(vertex_shift_t) {
     // This value was stored as JS Number, which is stored here as int32_t
-    vertex_shift = (int)vertex_shift_t->value->int32;
+    vertex_shift = vertex_shift_t->value->int32;
   }
   layer_mark_dirty(bitmap_layer);
 
