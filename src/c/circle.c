@@ -135,7 +135,7 @@ static void get_hour_min_index(int *hour_index, int *min_index) {
   int hour = (*t).tm_hour;
 
   *hour_index = ((hour % 12) / 12.0) * vertex_count;
-  *min_index = 4;
+  *min_index = (minute / 60.0) * vertex_count;
 }
 
 static void bitmap_layer_update_proc(Layer *layer, GContext* ctx) {
